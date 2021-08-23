@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>SBI証券の外国株式ポートフォリオで複数の株をマージする</title>
+    <style>
+        body {
+            margin: 0 auto;
+            max-width: 60em;
+        }
+
+        .fix-color-blue,
+        .fix-color-blue:visited,
+        .fix-color-blue:hover,
+        .fix-color-blue:active {
+            color: #00009F;
+        }
+
+        .row {
+            margin: 1em auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>SBI証券の外国株式ポートフォリオで複数の株をマージする</h1>
+    <div id="app">
+        <div class="row">
+            <h2>元々の保有株</h2>
+            <ul>
+                <li>
+                    <label>保有株数:<input v-model.number="currentCount" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    <label>取得単価:<input v-model.number="currentPrice" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    <label>為替レート:<input v-model.number="currentRate" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    取得総額: {{ currentSumPrice }}
+                </li>
+                <li>
+                    取得総額(円): {{ currentSumPriceYen }}
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <h2>新規取得株</h2>
+            <ul>
+                <li>
+                    <label>保有株数:<input v-model.number="newCount" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    <label>取得単価:<input v-model.number="newPrice" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    <label>為替レート:<input v-model.number="newRate" v-on:click="$event.target.select()"></label>
+                </li>
+                <li>
+                    取得総額: {{ newSumPrice }}
+                </li>
+                <li>
+                    取得総額(円): {{ newSumPriceYen }}
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <h2>合計</h2>
+            <ul>
+                <li>
+                    保有株数: {{ combinedCount }}
+                </li>
+                <li>
+                    取得単価: {{ combinedPrice }}
+                </li>
+                <li>
+                    為替レート: {{ combinedRate }}
+                </li>
+                <li>
+                    取得総額: {{ combinedSumPrice }}
+                </li>
+                <li>
+                    取得総額(円): {{ combinedSumPriceYen }}
+                </li>
+            </ul>
+        </div>
+        <div id="components-demo">
+            <button-counter></button-counter>
+        </div>
+
+    </div>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                currentCount: 0,
+                currentPrice: 0,
+                currentRate: 0,
+                newCount: 0,
+                newPrice: 0,
+                newRate: 0,
+            },
+            computed: {
+                currentSumPrice: function () { return this.currentCount * this.currentPrice },
+                currentSumPriceYen: function () { return this.currentSumPrice * this.currentRate },
+                newSumPrice: function () { return this.newCount * this.newPrice },
+                newSumPriceYen: function () { return this.newSumPrice * this.newRate },
+
+                combinedCount: function () { return this.currentCount + this.newCount },
+                combinedPrice: function () { return (this.currentSumPrice + this.newSumPrice) / this.combinedCount },
+                combinedRate: function () { return this.combinedSumPriceYen / this.combinedSumPrice },
+                combinedSumPrice: function () { return this.currentSumPrice + this.newSumPrice },
+                combinedSumPriceYen: function () { return this.currentSumPriceYen + this.newSumPriceYen },
+            }
+        })
+    </script>
+</body>
+
+</html>
