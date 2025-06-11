@@ -88,8 +88,13 @@
                     const url = this.url;
                     try {
                         const parse = new URL(url);
-                        if (parse.host === 'www.youtube.com' && parse.pathname === '/watch') {
-                            return parse.searchParams.get('v');
+                        if (parse.host === 'www.youtube.com') {
+                            if (parse.pathname === '/watch') {
+                                return parse.searchParams.get('v');
+                            }
+                            if (parse.pathname.startsWith('/shorts/')) {
+                                return parse.pathname.substr(8);
+                            }
                         } else if (parse.host === 'youtu.be') {
                             return parse.pathname.substr(1);
                         }
